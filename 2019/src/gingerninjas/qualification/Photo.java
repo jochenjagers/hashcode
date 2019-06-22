@@ -1,31 +1,50 @@
 package gingerninjas.qualification;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 public class Photo
 {
 	private int				id;
 	private char			orientation;
-	private List<String>	tags;
+	private HashSet<Integer>	tags;
 	private boolean			used;
 
+	private static  HashMap<String, Integer> tagMap = new HashMap<String, Integer>();
+	
 	public Photo(int id, char orientation, List<String> tags)
 	{
 		this.id = id;
 		this.orientation = Character.toUpperCase(orientation);
-		this.tags = tags;
 		this.used = false;
+		this.setTags(tags);
+		
 	}
 
 	public Photo(int id, char orientation, String... tags)
 	{
 		this.id = id;
 		this.orientation = Character.toUpperCase(orientation);
-		this.tags = Arrays.asList(tags);
+		this.setTags(Arrays.asList(tags));
 		this.used = false;
 	}
 
+	private void setTags(Collection<String> tags) {
+		this.tags = new HashSet<Integer>();
+		synchronized (tagMap) {
+			for(String t : tags) {
+				if(!tagMap.containsKey(t)) {
+					tagMap.put(t, tagMap.size());
+				}
+				this.tags.add(tagMap.get(t));
+			}
+		}
+	}
+	
 	public int getId()
 	{
 		return id;
@@ -46,7 +65,7 @@ public class Photo
 		return orientation == 'H';
 	}
 
-	public List<String> getTags()
+	public HashSet<Integer> getTags()
 	{
 		return tags;
 	}
@@ -66,7 +85,7 @@ public class Photo
 		int common = 0;
 		int unique1 = 0;
 		int unique2 = 0;
-		for(String tag1 : this.getTags())
+		for(Integer tag1 : this.getTags())
 		{
 			if(other.getTags().contains(tag1))
 				common++;
@@ -79,6 +98,6 @@ public class Photo
 
 	public String toString()
 	{
-		return this.id + ": " + this.orientation + " Tags: " + String.join(", ", this.tags);
+		return this.id + ": " + this.orientation + " Tags: " + this.tags.toString();
 	}
 }

@@ -29,7 +29,7 @@ public abstract class QualiSolver extends BaseSolver<Input, Output>
 		int common = 0;
 		int unique1 = 0;
 		int unique2 = 0;
-		for(String tag1 : first.getLast().getTags())
+		for(Integer tag1 : first.getLast().getTags())
 		{
 			if(second.getFirst().getTags().contains(tag1))
 				common++;

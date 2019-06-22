@@ -8,9 +8,9 @@ import java.util.TreeSet;
 
 public class Slide
 {
-	private List<Photo>	photos;
-	private Set<String>	tags;
-	private boolean		used;
+	private List<Photo>	 photos;
+	private Set<Integer> tags;
+	private boolean		 used;
 
 	public Slide(List<Photo> photos, boolean markUsed)
 	{
@@ -76,7 +76,11 @@ public class Slide
 		return photos;
 	}
 
-	public Set<String> getTags()
+	public int getMaxScore() {
+		return (int) Math.floor(this.getTags().size()/2);
+	}
+	
+	public Set<Integer> getTags()
 	{
 		if(this.tags == null)
 		{
@@ -104,7 +108,7 @@ public class Slide
 		int common = 0;
 		int unique1 = 0;
 		int unique2 = 0;
-		for(String tag1 : this.getTags())
+		for(Integer tag1 : this.getTags())
 		{
 			if(other.getTags().contains(tag1))
 				common++;
