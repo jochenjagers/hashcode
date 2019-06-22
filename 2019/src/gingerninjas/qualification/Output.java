@@ -75,19 +75,25 @@ public class Output extends BaseOutput
 		return super.getScore();
 	}
 	
+	
 
 	public void calcScore()
 	{
 		int totalScore = 0;
-		for(Vehicle v : vehicles)
+		Slide previous = null;
+		for(Slide s: this.slides)
 		{
-			totalScore += v.getScore(input);
+			if(previous != null)
+			{
+				totalScore += s.calcInterestFactor(previous);
+			}
+			previous = s;
 		}
 		this.score = totalScore;
 	}
 	
 	public void reset()
 	{
-		this.slides = new ArrayList<>(this.input.getPhotos().getSize());
+		this.slides = new ArrayList<>(this.input.getPhotos().size());
 	}
 }
