@@ -39,4 +39,8 @@ public class Photo
 	{
 		return tags;
 	}
+	
+	public String toString() {
+		return this.id + ": " + this.orientation + " Tags: " + String.join(", ", this.tags);
+	}
 }
