@@ -21,6 +21,11 @@ public class Input extends BaseInput
 	}
 
 	
+	public List<Photo> getPhotos() {
+		return photos;
+	}
+
+
 	@Override
 	protected void parse(BufferedReader reader) throws IOException
 	{
