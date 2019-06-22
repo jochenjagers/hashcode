@@ -17,7 +17,7 @@ public class Solver extends QualiSolver
 	@Override
 	protected void solve()
 	{
-		while(!abortRequested)
+//		while(!abortRequested)
 		{
 			output.reset();
 			input.reset();
@@ -50,7 +50,7 @@ public class Solver extends QualiSolver
 			
 			while(chains.size() > 1)
 			{
-//				logger.debug("chains: " + chains.size());
+				logger.debug("chains: " + chains.size());
 //				Collections.shuffle(chains);
 				current = chains.getFirst();
 //				current = chains.getLast();
