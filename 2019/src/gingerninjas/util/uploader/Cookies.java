@@ -39,7 +39,7 @@ public class Cookies
 					key = cookieProperties.getProperty(i + ".key");
 					value = cookieProperties.getProperty(i + ".value");
 					domain = cookieProperties.getProperty(i + ".domain");
-					logger.info("adding cookie: '" + key + "'");
+					logger.debug("adding cookie: '" + key + "'");
 					addCookie(key, value, domain);
 				}
 				else
