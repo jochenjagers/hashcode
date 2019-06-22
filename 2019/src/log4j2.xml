@@ -30,7 +30,7 @@
 	<loggers>
 		<Logger name="gingerninjas" level="info" />
 		<Logger name="gingerninjas.util.uploader.Cookies" level="debug" />
-		<Logger name="solver" level="info" />
+		<Logger name="solver" level="debug" />
 		<root level="warn">
 			<appender-ref ref="Console" />
 			<appender-ref ref="File" />

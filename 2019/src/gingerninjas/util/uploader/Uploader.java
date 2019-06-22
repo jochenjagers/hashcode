@@ -2,16 +2,22 @@ package gingerninjas.util.uploader;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.*;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import gingerninjas.BaseOutput;
 
@@ -200,6 +206,37 @@ public class Uploader
 				}
 			}
 		}
+		else
+		{
+			try
+			{
+				File highscore = new File(round.getName() + "/highscore.properties");
+				if(highscore.exists())
+				{
+					Properties p = new Properties();
+					p.load(new FileInputStream(highscore));
+					for(DataSet ds: round.getDatasets())
+					{
+						String key = ds.getName().substring(0, ds.getName().indexOf(" "));
+						if(p.containsKey(key))
+							ds.setHighScore((int) Double.parseDouble(p.getProperty(key)));
+						else
+							ds.setHighScore(0);
+					}
+				}
+				else
+				{
+					for(DataSet ds: round.getDatasets())
+					{
+						ds.setHighScore(0);
+					}
+				}
+			}
+			catch(IOException e)
+			{
+				logger.error("could not load highscore from file", e); 
+			}
+		}
 	}
 
 	public static synchronized void publishResult(BaseOutput output)
@@ -217,9 +254,9 @@ public class Uploader
 					logger.error("Can't open result directory (" + r.getName() + ")");
 					return;
 				}
+				// update highscores
+				loadHighScores(r);
 				if(online) {
-					// update highscores
-					loadHighScores(r);
 	
 					for(DataSet d : r.getDatasets())
 					{
@@ -276,6 +313,37 @@ public class Uploader
 								logger.error("Upload failed. " + e.getMessage());
 							}
 						}
+					}
+				}
+				else
+				{
+					try
+					{
+						Properties p = new Properties();
+						File highscore = new File(r.getName() + "/highscore.properties");
+						if(highscore.exists())
+							p.load(new FileInputStream(highscore));
+						for(DataSet d : r.getDatasets())
+						{
+							if(d.getName().equalsIgnoreCase(output.getName()))
+							{
+								if(d.getHighScore() >= output.getScore())
+								{
+									logger.info("Eine gleiche oder höhere Punktzahl wurde bereits gespeichert. Skipping save. " + output.getScore());
+									p.setProperty(d.getName().substring(0, d.getName().indexOf(" ")), "" + d.getHighScore());
+								}
+								else
+								{
+									p.setProperty(d.getName().substring(0, d.getName().indexOf(" ")), "" + output.getScore());
+									logger.info("Save ok.");
+								}
+							}
+						}
+						p.store(new FileWriter(r.getName() + "/highscore.properties"), new Date().toString());
+					}
+					catch(IOException e)
+					{
+						logger.error("could not save highscore to file", e); 
 					}
 				}
 			}
