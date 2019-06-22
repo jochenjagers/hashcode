@@ -53,6 +53,7 @@ public class Solver extends QualiSolver
 //				logger.debug("chains: " + chains.size());
 //				Collections.shuffle(chains);
 				current = chains.getFirst();
+//				current = chains.getLast();
 				iter = chains.iterator();
 				iter.next(); // skip first = self
 				best = null;
@@ -118,6 +119,8 @@ public class Solver extends QualiSolver
 				{
 					current.addAll(chains.getLast());
 					chains.removeLast();
+//					current.addAll(chains.getFirst());
+//					chains.removeFirst();
 				}
 				else if(current_first)
 				{
