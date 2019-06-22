@@ -1,6 +1,7 @@
 package gingerninjas.qualification;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class Slide
@@ -41,6 +42,21 @@ public class Slide
 	
 	public String toString()
 	{
-		
+		StringBuffer buffer = new StringBuffer();
+		Iterator<Photo> i = photos.iterator();
+		while(i.hasNext())
+		{
+			buffer.append(i.next().getId());
+			if(i.hasNext())
+				buffer.append(' ');
+		}
+		return buffer.toString();
 	}	
+	
+	public static void main(String[] args)
+	{
+		List<String> tags = new ArrayList<>();
+		System.out.println("---" + new Slide(new Photo(1, 'v', tags), new Photo(2, 'v', tags)) + "---");
+		System.out.println("---" + new Slide(new Photo(3, 'h', tags)) + "---");
+	}
 }
