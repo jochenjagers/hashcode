@@ -32,7 +32,7 @@ public class Output extends BaseOutput
 	@Override
 	protected void write(BufferedWriter r) throws IOException
 	{
-		r.write(slides.size());
+		r.write(Integer.toString(slides.size()));
 		r.write("\n");
 		
 		Iterator<Slide> i = slides.iterator();
@@ -40,7 +40,7 @@ public class Output extends BaseOutput
 		{
 			r.write(i.next().toString());
 			if(i.hasNext())
-				r.write(' ');
+				r.write('\n');
 		}
 		r.flush();
 	}
