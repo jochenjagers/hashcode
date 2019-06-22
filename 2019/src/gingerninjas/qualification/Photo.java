@@ -1,5 +1,6 @@
 package gingerninjas.qualification;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Photo
@@ -13,6 +14,13 @@ public class Photo
 		this.id = id;
 		this.orientation = Character.toUpperCase(orientation);
 		this.tags = tags;
+	}
+	
+	public Photo(int id, char orientation, String... tags)
+	{
+		this.id = id;
+		this.orientation = Character.toUpperCase(orientation);
+		this.tags = Arrays.asList(tags);
 	}
 
 	public int getId()
