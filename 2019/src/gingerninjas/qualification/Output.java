@@ -5,21 +5,21 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import gingerninjas.BaseOutput;
 
 public class Output extends BaseOutput
 {
 	private Input				input;
+	private List<Slide>			slides;
 
 	public void init(Input input)
 	{
 		this.input = input;
-		vehicles = new ArrayList<>(input.getFleetSize());
-		for(int i = 0; i < input.getFleetSize(); ++i)
-		{
-			vehicles.add(new Vehicle());
-		}
+		this.reset();
+		
 	}
 
 	public Output(File path, String name, boolean load) throws IOException
@@ -30,6 +30,17 @@ public class Output extends BaseOutput
 	@Override
 	protected void write(BufferedWriter r) throws IOException
 	{
+		r.write(slides.size());
+		r.write("\n");
+		
+		Iterator<Slide> i = slides.iterator();
+		while(i.hasNext())
+		{
+			r.write(i.next().toString());
+			if(i.hasNext())
+				r.write(' ');
+		}
+		r.flush();
 	}
 
 	@Override
@@ -37,23 +48,24 @@ public class Output extends BaseOutput
 	{
 		String line = null;
 
+		line = reader.readLine(); // omit first line
 		line = reader.readLine();
-		String[] splittedLine = line.split(" ");
-
-		do
+		
+		
+		String[] splittedLine;
+		int photoId;
+		List<Photo> photos;
+		while(line != null)
 		{
 			splittedLine = line.split(" ");
-
-			int rides = Integer.parseInt(splittedLine[0]);
-
-			Vehicle v = new Vehicle();
-
-			for(int i = 1; i <= rides; i++)
+			photos = new ArrayList<>(2);
+			for(String idS: splittedLine)
 			{
-				v.getRides().add(input.getRides()[Integer.parseInt(splittedLine[i])]);
+				photoId = Integer.parseInt(idS);
+				photos.add(this.input.getPhotos().get(photoId));
 			}
-			this.vehicles.add(v);
-		} while(line != null);
+			slides.add(new Slide(photos));
+		}
 	}
 	
 	@Override
@@ -76,14 +88,6 @@ public class Output extends BaseOutput
 	
 	public void reset()
 	{
-		for(Vehicle v: vehicles)
-		{
-			v.reset();
-		}
-		for(Ride r: input.getRides())
-		{
-			r.setDone(false);
-			r.setRating(0);
-		}
+		this.slides = new ArrayList<>(this.input.getPhotos().getSize());
 	}
 }
