@@ -7,3 +7,4 @@
 *.zip
 *.out*
 *.log
+/cookies.properties
