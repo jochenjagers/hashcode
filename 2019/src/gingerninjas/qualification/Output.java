@@ -66,7 +66,7 @@ public class Output extends BaseOutput
 				photoId = Integer.parseInt(idS);
 				photos.add(this.input.getPhotos().get(photoId));
 			}
-			slides.add(new Slide(photos));
+			this.slides.add(new Slide(photos, true));
 		}
 	}
 	
@@ -76,8 +76,19 @@ public class Output extends BaseOutput
 		this.calcScore();
 		return super.getScore();
 	}
+
+	public List<Slide> getSlides()
+	{
+		return slides;
+	}
 	
-	
+	public boolean addSlide(Slide slide)
+	{
+		if(slide.isUsed())
+			return false;
+		slide.setUsed(true);
+		return this.slides.add(slide);
+	}
 
 	public void calcScore()
 	{
@@ -97,6 +108,8 @@ public class Output extends BaseOutput
 	public void reset()
 	{
 		this.slides = new ArrayList<>(this.input.getPhotos().size());
+		for(Photo p: input.getPhotos())
+			p.setUsed(false);
 	}
 	
 	public static void main(String[] args) throws IOException
