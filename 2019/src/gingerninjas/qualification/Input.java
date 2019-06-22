@@ -3,13 +3,16 @@ package gingerninjas.qualification;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
 import gingerninjas.BaseInput;
 
 public class Input extends BaseInput
 {
-	int collectionSize;
+	List<Photo> photos;
 	
 	
 	public Input(File path, String name) throws IOException
@@ -24,37 +27,25 @@ public class Input extends BaseInput
 		String line = null;
 
 		line = reader.readLine();
-		String[] splittedLine = line.split(" ");
-
-		rows = Integer.parseInt(splittedLine[0]);
-		cols = Integer.parseInt(splittedLine[1]);
-		fleetSize = Integer.parseInt(splittedLine[2]);
-		numberOfRides = Integer.parseInt(splittedLine[3]);
-		bonus = Integer.parseInt(splittedLine[4]);
-		simulationSteps = Integer.parseInt(splittedLine[5]);
-
-		rides = new Ride[numberOfRides];
-
-		this.maxScore = 0;
 		
-		for(int r = 0; r < numberOfRides; r++)
+		int rows = Integer.parseInt(line);
+		this.photos = new ArrayList<Photo>(rows);
+				
+		for(int r = 0; r < rows; r++)
 		{
 			line = reader.readLine();
 			logger.debug("endpoint: " + line);
-			splittedLine = line.split(" ");
-
-			int startX = Integer.parseInt(splittedLine[0]);
-			int startY = Integer.parseInt(splittedLine[1]);
-			int endX = Integer.parseInt(splittedLine[2]);
-			int endY = Integer.parseInt(splittedLine[3]);
-			int startTime = Integer.parseInt(splittedLine[4]);
-			int endTime = Integer.parseInt(splittedLine[5]);
-
-			rides[r] = new Ride(r, startX, startY, endX, endY, startTime, endTime);
-			this.maxScore += rides[r].getDistance();
-			if(rides[r].calcTimeToGetThere(0, 0) < startTime) {
-				this.maxScore += bonus;
-			}
+			ArrayList<String> splittedLine = new ArrayList<>(Arrays.asList(line.split(" ")));
+			
+			
+			char orientation = splittedLine.get(0).charAt(0);
+			// remove orientation
+			splittedLine.remove(0);
+			// remove tag count
+			splittedLine.remove(0);
+			
+			this.photos.add(new Photo(r, orientation, splittedLine));
+			
 		}
 	}
 
@@ -65,11 +56,18 @@ public class Input extends BaseInput
 	@Override
 	public String toString()
 	{
-		return "Input [rows=" + rows + ", cols=" + cols + ", fleetSize=" + fleetSize + ", numberOfRides=" + numberOfRides + ", bonus=" + bonus
-				+ ", simulationSteps=" + simulationSteps + "]";
+		return "Input [#photos "+this.photos.size()+"]";
 	}
 
 	public static void main(String[] args) throws IOException
 	{
+		
+		
+		Input test = new Input(new File("Online Qualification Round/"), "A - Example");
+		
+		LogManager.getLogger().info("A - Example Size: " + test.photos.size());
+		for(Photo p : test.photos) {
+			LogManager.getLogger().info(p);
+		}
 	}
 }
