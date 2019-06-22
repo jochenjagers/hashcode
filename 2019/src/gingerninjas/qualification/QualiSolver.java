@@ -33,8 +33,8 @@ public abstract class QualiSolver extends BaseSolver<Input, Output>
 		int unique1 = 0;
 		int unique2 = 0;
 		
-		int hash = first.getLast().hashCode() + second.getFirst().hashCode();
-		if(!factorCache.containsKey(hash)) {
+		//int hash = first.getLast().hashCode() + second.getFirst().hashCode();
+		//if(!factorCache.containsKey(hash)) {
 			for(Integer tag1 : first.getLast().getTags())
 			{
 				if(second.getFirst().getTags().contains(tag1))
@@ -43,8 +43,9 @@ public abstract class QualiSolver extends BaseSolver<Input, Output>
 					unique1++;
 			}
 			unique2 = second.getFirst().getTags().size() - common;
-			factorCache.put(hash, Math.min(common, Math.min(unique1, unique2)));
-		}
-		return factorCache.get(hash);
+			//factorCache.put(hash, //Math.min(common, Math.min(unique1, unique2)));
+		//}
+		//return factorCache.get(hash);
+		return Math.min(common, Math.min(unique1, unique2));
 	}
 }
