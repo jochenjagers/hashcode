@@ -5,6 +5,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -95,5 +97,32 @@ public class Output extends BaseOutput
 	public void reset()
 	{
 		this.slides = new ArrayList<>(this.input.getPhotos().size());
+	}
+	
+	public static void main(String[] args) throws IOException
+	{
+		Output o = new Output(new File("."), "o", false);
+		o.init(new Input(new File("Online Qualification Round/"), "A - Example"));
+		
+		Slide[] slides = new Slide[] {
+			new Slide(o.input.getPhotos().get(0)),
+			new Slide(o.input.getPhotos().get(3)),
+			new Slide(o.input.getPhotos().get(1), o.input.getPhotos().get(2)),
+		};
+		
+		o.slides = Arrays.asList(slides);
+		System.out.println(o.getScore());
+		
+		Collections.shuffle(o.slides);
+		System.out.println(o.getScore());
+		
+		Collections.shuffle(o.slides);
+		System.out.println(o.getScore());
+		
+		Collections.shuffle(o.slides);
+		System.out.println(o.getScore());
+		
+		Collections.shuffle(o.slides);
+		System.out.println(o.getScore());
 	}
 }

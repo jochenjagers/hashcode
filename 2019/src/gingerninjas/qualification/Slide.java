@@ -59,9 +59,9 @@ public class Slide
 		int common = 0;
 		int unique1 = 0;
 		int unique2 = 0;
-		for(String tag1: this.tags)
+		for(String tag1: this.getTags())
 		{
-			if(other.tags.contains(tag1))
+			if(other.getTags().contains(tag1))
 				common++;
 			else
 				unique1++;
@@ -82,21 +82,4 @@ public class Slide
 		}
 		return buffer.toString();
 	}	
-	
-	public static void main(String[] args)
-	{
-		Slide s1 = new Slide(new Photo(1, 'v', "a", "b", "c"), new Photo(2, 'v', "b", "c", "d"));
-		Slide s2 = new Slide(new Photo(3, 'h', "a", "b", "c", "d"));
-		Slide s3 = new Slide(new Photo(4, 'v', "a", "b"), new Photo(5, 'v', "c", "d"));
-		Slide s4 = new Slide(new Photo(6, 'h', "a", "b"));
-		Slide s5 = new Slide(new Photo(7, 'h', "c", "d"));
-		Slide s6 = new Slide(new Photo(8, 'h', "e"));
-		
-		System.out.println("---" + s1 + "--- " + s1.getTags());
-		System.out.println("---" + s2 + "--- " + s2.getTags());
-		System.out.println("---" + s3 + "--- " + s3.getTags());
-		System.out.println("---" + s4 + "--- " + s4.getTags());
-		System.out.println("---" + s5 + "--- " + s5.getTags());
-		System.out.println("---" + s6 + "--- " + s6.getTags());
-	}
 }
