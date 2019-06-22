@@ -89,6 +89,14 @@ public class Output extends BaseOutput
 		slide.setUsed(true);
 		return this.slides.add(slide);
 	}
+	
+	public void addSlides(List<Slide> slides)
+	{
+		for(Slide s: slides)
+		{
+			addSlide(s);
+		}
+	}
 
 	public void calcScore()
 	{
