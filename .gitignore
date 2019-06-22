@@ -1,0 +1,9 @@
+/.recommenders/
+.project
+
+.classpath
+*.metadata
+*.settings
+*.zip
+*.out*
+*.log
