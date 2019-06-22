@@ -9,6 +9,10 @@ public class DataSet
 	private String	inputBlobKey;
 	private int		highScore;
 
+	public DataSet(String name) {
+		this.name = name;
+	}
+	
 	public DataSet(JSONObject obj)
 	{
 		this.id = obj.getString("id");

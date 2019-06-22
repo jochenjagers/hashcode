@@ -55,6 +55,16 @@ public class Round
 	private Date				start;
 	private Date				end;
 
+	public Round(String name, String... dataSets) {
+		this.name = name;
+		this.datasets = new ArrayList<DataSet>();
+		this.start = new Date(0);
+		this.end = new Date(2100,1,1);
+		for(String d : dataSets) {
+			this.datasets.add(new DataSet(d));
+		}
+	}
+	
 	public Round(JSONObject obj)
 	{
 		this.datasets = new ArrayList<>();

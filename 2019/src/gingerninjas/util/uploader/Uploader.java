@@ -23,6 +23,8 @@ public class Uploader
 	private static long			accessTokenTime	= 0;
 	private static String		sourceId		= null;
 
+	private static final boolean online		= false;
+	
 	static
 	{
 		accessTokenTime = System.currentTimeMillis();
@@ -31,16 +33,18 @@ public class Uploader
 
 	public static String getAccessToken()
 	{
-		try
-		{
-			// public static String TOKEN_URL = "...";
-			JSONObject value = getData(Cookies.TOKEN_URL, false, false);
-			logger.info("New Token: " + "Bearer " + value.getString("access_token"));
-			return "Bearer " + value.getString("access_token");
-		}
-		catch(Exception e)
-		{
-			logger.error(e.getMessage());
+		if(online) {
+			try
+			{
+				// public static String TOKEN_URL = "...";
+				JSONObject value = getData(Cookies.TOKEN_URL, false, false);
+				logger.info("New Token: " + "Bearer " + value.getString("access_token"));
+				return "Bearer " + value.getString("access_token");
+			}
+			catch(Exception e)
+			{
+				logger.error(e.getMessage());
+			}
 		}
 		return null;
 	}
@@ -155,37 +159,42 @@ public class Uploader
 	public static ArrayList<Round> getRounds()
 	{
 		ArrayList<Round> result = new ArrayList<>();
-
-		JSONObject obj = getData("https://hashcode-judge.appspot.com/api/judge/v1/rounds");
-		if(obj != null)
-		{
-			JSONArray items = obj.getJSONArray("items");
-			for(int i = 0; i < items.length(); i++)
+		if(online) {
+			JSONObject obj = getData("https://hashcode-judge.appspot.com/api/judge/v1/rounds");
+			if(obj != null)
 			{
-				result.add(new Round(items.getJSONObject(i)));
+				JSONArray items = obj.getJSONArray("items");
+				for(int i = 0; i < items.length(); i++)
+				{
+					result.add(new Round(items.getJSONObject(i)));
+				}
 			}
+		} else {
+				result.add(new Round("Online Qualification Round", "A - Example", "B - Lovely Landscapes", "C - Memorable Moments", "D - Pet Pictures", "E - Shiny Selfies"));
 		}
 		return result;
 	}
 
 	public static void loadHighScores(Round round)
 	{
-		JSONObject obj = getData("https://hashcode-judge.appspot.com/api/judge/v1/submissions/" + round.getId());
-		if(obj != null)
-		{
-			JSONArray items = obj.getJSONArray("items");
-			for(int i = 0; i < items.length(); i++)
+		if(online) {
+			JSONObject obj = getData("https://hashcode-judge.appspot.com/api/judge/v1/submissions/" + round.getId());
+			if(obj != null)
 			{
-				JSONObject submission = items.getJSONObject(i);
-				if(submission.getBoolean("valid") == true && submission.getBoolean("scored") == true)
+				JSONArray items = obj.getJSONArray("items");
+				for(int i = 0; i < items.length(); i++)
 				{
-					// Ergbnis ist valid und wurde bewertet
-					String datasetId = submission.getJSONObject("dataSet").getString("id");
-					for(int j = 0; j < round.getDatasets().size(); ++j)
+					JSONObject submission = items.getJSONObject(i);
+					if(submission.getBoolean("valid") == true && submission.getBoolean("scored") == true)
 					{
-						if(round.getDatasets().get(j).getId().equals(datasetId))
+						// Ergbnis ist valid und wurde bewertet
+						String datasetId = submission.getJSONObject("dataSet").getString("id");
+						for(int j = 0; j < round.getDatasets().size(); ++j)
 						{
-							round.getDatasets().get(j).setHighScore(submission.getInt("score"));
+							if(round.getDatasets().get(j).getId().equals(datasetId))
+							{
+								round.getDatasets().get(j).setHighScore(submission.getInt("score"));
+							}
 						}
 					}
 				}
@@ -208,63 +217,64 @@ public class Uploader
 					logger.error("Can't open result directory (" + r.getName() + ")");
 					return;
 				}
-
-				// update highscores
-				loadHighScores(r);
-
-				for(DataSet d : r.getDatasets())
-				{
-					if(d.getName().equalsIgnoreCase(output.getName()))
+				if(online) {
+					// update highscores
+					loadHighScores(r);
+	
+					for(DataSet d : r.getDatasets())
 					{
-						if(d.getHighScore() >= output.getScore())
+						if(d.getName().equalsIgnoreCase(output.getName()))
 						{
-							logger.info("Eine gleiche oder höhere Punktzahl wurde bereits hochgeladen. Skipping upload. " + output.getScore());
-							break;
-						}
-						try
-						{
-							output.toFile();
-						}
-						catch(IOException e1)
-						{
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-						File result = new File("./" + r.getName() + "/" + d.getName() + ".out");
-						if(!result.isFile())
-						{
-							logger.error("Can't find result for dataset " + d.getName() + ". Skipping upload.");
-							break;
-						}
-						try
-						{
-							// Do Upload
-							String resultId = uploadFile(result);
-							if(sourceId == null)
+							if(d.getHighScore() >= output.getScore())
 							{
-								// upload source file if not available
-								File source = new File("source.zip");
-								sourceId = uploadFile(source);
+								logger.info("Eine gleiche oder höhere Punktzahl wurde bereits hochgeladen. Skipping upload. " + output.getScore());
+								break;
 							}
-							if(sourceId != null && resultId != null)
+							try
 							{
-								JSONObject submission = getData(
-										"https://hashcode-judge.appspot.com/api/judge/v1/submissions?dataSet=" + d.getId() + "&sourcesBlobKey="
-												+ URLEncoder.encode(sourceId, "UTF-8") + "&submissionBlobKey=" + URLEncoder.encode(resultId, "UTF-8"),
-										true);
-								if(submission != null && submission.getString("id") != null && !submission.getString("id").equalsIgnoreCase(""))
+								output.toFile();
+							}
+							catch(IOException e1)
+							{
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							File result = new File("./" + r.getName() + "/" + d.getName() + ".out");
+							if(!result.isFile())
+							{
+								logger.error("Can't find result for dataset " + d.getName() + ". Skipping upload.");
+								break;
+							}
+							try
+							{
+								// Do Upload
+								String resultId = uploadFile(result);
+								if(sourceId == null)
 								{
-									logger.info("Submission ok.");
+									// upload source file if not available
+									File source = new File("source.zip");
+									sourceId = uploadFile(source);
 								}
-								else
+								if(sourceId != null && resultId != null)
 								{
-									throw new Exception("Submission failed.");
+									JSONObject submission = getData(
+											"https://hashcode-judge.appspot.com/api/judge/v1/submissions?dataSet=" + d.getId() + "&sourcesBlobKey="
+													+ URLEncoder.encode(sourceId, "UTF-8") + "&submissionBlobKey=" + URLEncoder.encode(resultId, "UTF-8"),
+											true);
+									if(submission != null && submission.getString("id") != null && !submission.getString("id").equalsIgnoreCase(""))
+									{
+										logger.info("Submission ok.");
+									}
+									else
+									{
+										throw new Exception("Submission failed.");
+									}
 								}
 							}
-						}
-						catch(Exception e)
-						{
-							logger.error("Upload failed. " + e.getMessage());
+							catch(Exception e)
+							{
+								logger.error("Upload failed. " + e.getMessage());
+							}
 						}
 					}
 				}
