@@ -39,6 +39,7 @@ public class Cookies
 					key = cookieProperties.getProperty(i + ".key");
 					value = cookieProperties.getProperty(i + ".value");
 					domain = cookieProperties.getProperty(i + ".domain");
+					logger.info("adding cookie: '" + key + "'");
 					addCookie(key, value, domain);
 				}
 				else
@@ -59,5 +60,11 @@ public class Cookies
 		cookie.setDomain(domain);
 		cookie.setPath("/");
 		cookieManager.getCookieStore().add(new URI("https://" + domain + "/"), cookie);
+	}
+	
+	public static void main(String[] args)
+	{
+		System.out.println(TOKEN_URL);
+		System.out.println(cookieManager.getCookieStore().getCookies());
 	}
 }
