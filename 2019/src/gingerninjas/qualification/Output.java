@@ -51,12 +51,12 @@ public class Output extends BaseOutput
 		String line = null;
 
 		line = reader.readLine(); // omit first line
-		line = reader.readLine();
-		
 		
 		String[] splittedLine;
 		int photoId;
 		List<Photo> photos;
+
+		line = reader.readLine();
 		while(line != null)
 		{
 			splittedLine = line.split(" ");
