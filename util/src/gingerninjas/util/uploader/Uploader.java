@@ -31,6 +31,8 @@ public class Uploader
 
 	private static final boolean online		= true;
 	
+	private static final String iframe = "https://accounts.google.com/o/oauth2/iframe";
+	
 	static
 	{
 		accessTokenTime = System.currentTimeMillis();
@@ -43,11 +45,8 @@ public class Uploader
 			try
 			{
 				logger.info(Cookies.TOKEN_URL);
-				String result = request("https://accounts.google.com/o/oauth2/iframe", false);
 				Cookies.printCookies();
-				logger.info(Cookies.getCookie("SIDCC", "accounts.google.com"));
-				logger.info(Cookies.getCookie("SIDCC", ".google.com"));
-				// public static String TOKEN_URL = "...";
+				
 				JSONObject value = new JSONObject(request(Cookies.TOKEN_URL, false));
 				logger.info("New Token: " + "Bearer " + value.getString("access_token"));
 				return "Bearer " + value.getString("access_token");
@@ -76,6 +75,7 @@ public class Uploader
 				yc.setDoOutput(true);
 			}
 			yc.setRequestProperty("Authorization", accessToken);
+			yc.setRequestProperty("X-Requested-With", "XmlHttpRequest");
 
 			BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
 			String inputLine;
