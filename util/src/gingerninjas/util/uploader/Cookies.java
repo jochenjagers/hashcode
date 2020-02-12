@@ -12,24 +12,22 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class Cookies
-{
-	private static final Logger		logger	= LogManager.getLogger(Cookies.class);
+public class Cookies {
+	private static final Logger logger = LogManager.getLogger(Cookies.class);
 
-	private static Properties		cookieProperties;
-	private static CookieManager	cookieManager;
+	private static Properties cookieProperties;
+	private static CookieManager cookieManager;
 
-	public static String			TOKEN_URL;
+	public static String TOKEN_URL;
 
-	static
-	{
-		try
-		{
+	static {
+		try {
 			cookieProperties = new Properties();
 			cookieProperties.load(new FileInputStream("../cookies.properties"));
 			TOKEN_URL = cookieProperties.getProperty("token.url");
@@ -38,38 +36,34 @@ public class Cookies
 			CookieHandler.setDefault(cookieManager);
 			loadCookies();
 			/*
-			String key, value, domain;
-			for(int i = 1; i < 100; i++)
-			{
-				if(cookieProperties.containsKey(i + ".key"))
-				{
-					key = cookieProperties.getProperty(i + ".key");
-					value = cookieProperties.getProperty(i + ".value");
-					domain = cookieProperties.getProperty(i + ".domain");
-					logger.debug("adding cookie: '" + key + "'");
-					addCookie(key, value, domain);
-				}
-				else
-				{
-					break;
-				}
-			}
-			*/
-		}
-		catch(Exception e)
-		{
+			 * String key, value, domain; for(int i = 1; i < 100; i++) {
+			 * if(cookieProperties.containsKey(i + ".key")) { key =
+			 * cookieProperties.getProperty(i + ".key"); value =
+			 * cookieProperties.getProperty(i + ".value"); domain =
+			 * cookieProperties.getProperty(i + ".domain"); logger.debug("adding cookie: '"
+			 * + key + "'"); addCookie(key, value, domain); } else { break; } }
+			 */
+		} catch (Exception e) {
 			logger.error("Cookies konnten nicht erzeugt werden.");
 		}
 	}
 
-	private static void addCookie(String key, String value, String domain) throws URISyntaxException
-	{
+	public static void addCookie(String key, String value, String domain) throws URISyntaxException {
 		HttpCookie cookie = new HttpCookie(key, value);
 		cookie.setDomain(domain);
 		cookie.setPath("/");
 		cookieManager.getCookieStore().add(new URI("https://" + domain + "/"), cookie);
 	}
-	
+
+	public static String getCookie(String key, String domain) throws URISyntaxException {
+		List<HttpCookie> cookies = cookieManager.getCookieStore().get(new URI("https://" + domain + "/"));
+		for (HttpCookie cookie : cookies) {
+			if (cookie.getName().equalsIgnoreCase(key))
+				return cookie.getValue();
+		}
+		return null;
+	}
+
 	private static void loadCookies() {
 		FileReader fr = null;
 		BufferedReader br = null;
@@ -116,8 +110,7 @@ public class Cookies
 		}
 	}
 	
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 		System.out.println(TOKEN_URL);
 		System.out.println(cookieManager.getCookieStore().getCookies());
 	}
