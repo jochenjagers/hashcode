@@ -1,7 +1,5 @@
 /.recommenders/
-.project
 
-.classpath
 *.metadata
 *.settings
 *.zip
