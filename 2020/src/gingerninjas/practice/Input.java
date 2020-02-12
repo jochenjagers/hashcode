@@ -42,10 +42,13 @@ public class Input extends BaseInput
 
 		slicesPerType = new int[types];
 
+		line = r.readLine();
 		String[] secondLine = line.split(" ");
+		if(secondLine.length != types)
+			logger.warn("lengths do not match!");
 		for(int i = 0; i < secondLine.length; i++)
 		{
-			slicesPerType[i] = Integer.parseInt(firstLine[i]);
+			slicesPerType[i] = Integer.parseInt(secondLine[i]);
 		}
 		
 		setMaxScore(slices);
