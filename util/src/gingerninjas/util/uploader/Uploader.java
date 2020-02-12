@@ -31,8 +31,6 @@ public class Uploader
 
 	private static final boolean online		= true;
 	
-	private static final String iframe = "https://accounts.google.com/o/oauth2/iframe";
-	
 	static
 	{
 		accessTokenTime = System.currentTimeMillis();
