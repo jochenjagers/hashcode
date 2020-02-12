@@ -29,7 +29,7 @@ public class Uploader
 	private static long			accessTokenTime	= 0;
 	private static String		sourceId		= null;
 
-	private static final boolean online		= false;
+	private static final boolean online		= true;
 	
 	static
 	{
