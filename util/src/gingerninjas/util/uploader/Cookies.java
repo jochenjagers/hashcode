@@ -63,6 +63,13 @@ public class Cookies {
 		}
 		return null;
 	}
+	
+	public static void printCookies()
+	{
+		for (HttpCookie cookie : cookieManager.getCookieStore().getCookies()) {
+			logger.info(cookie.getDomain() + "\t" + cookie.getName() + "\t" + cookie.getValue());
+		}
+	}
 
 	private static void loadCookies() {
 		FileReader fr = null;
