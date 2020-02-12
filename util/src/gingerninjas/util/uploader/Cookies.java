@@ -83,6 +83,7 @@ public class Cookies {
 			while((line = br.readLine()) != null) {
 				logger.debug("endpoint: " + line);
 				ArrayList<String> splittedLine = new ArrayList<>(Arrays.asList(line.split("\t")));
+				Cookies.addCookie(splittedLine.get(0), splittedLine.get(1), ".google.com");
 			}
 			
 			
