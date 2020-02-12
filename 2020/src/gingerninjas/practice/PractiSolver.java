@@ -9,8 +9,6 @@ import gingerninjas.BaseSolver;
 
 public abstract class PractiSolver extends BaseSolver<Input, Output>
 {
-	private HashMap<Integer, Integer> factorCache = new HashMap<Integer, Integer>();
-	
 	@Override
 	protected Input createInput(File path) throws IOException
 	{
