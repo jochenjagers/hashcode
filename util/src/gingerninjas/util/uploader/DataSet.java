@@ -16,7 +16,7 @@ public class DataSet
 	public DataSet(JSONObject obj)
 	{
 		this.id = obj.getString("id");
-		this.name = obj.getString("name");
+		this.name = obj.getString("name").replace('–', '-');
 		this.inputBlobKey = obj.getString("inputBlobKey");
 		this.highScore = 0;
 	}
