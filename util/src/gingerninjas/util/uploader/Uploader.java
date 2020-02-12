@@ -75,7 +75,7 @@ public class Uploader
 			yc.setRequestProperty("Authorization", accessToken);
 			yc.setRequestProperty("X-Requested-With", "XmlHttpRequest");
 
-			BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
+			BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream(), "UTF-8"));
 			String inputLine;
 			while((inputLine = in.readLine()) != null)
 				result += inputLine;
