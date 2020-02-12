@@ -47,5 +47,7 @@ public class Input extends BaseInput
 		{
 			slicesPerType[i] = Integer.parseInt(firstLine[i]);
 		}
+		
+		setMaxScore(slices);
 	}
 }
