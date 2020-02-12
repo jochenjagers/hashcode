@@ -6,6 +6,7 @@ import java.net.CookieManager;
 import java.net.HttpCookie;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
@@ -54,12 +55,23 @@ public class Cookies
 		}
 	}
 
-	private static void addCookie(String key, String value, String domain) throws URISyntaxException
+	public static void addCookie(String key, String value, String domain) throws URISyntaxException
 	{
 		HttpCookie cookie = new HttpCookie(key, value);
 		cookie.setDomain(domain);
 		cookie.setPath("/");
 		cookieManager.getCookieStore().add(new URI("https://" + domain + "/"), cookie);
+	}
+	
+	public static String getCookie(String key, String domain) throws URISyntaxException
+	{
+		List<HttpCookie> cookies = cookieManager.getCookieStore().get(new URI("https://" + domain + "/"));
+		for(HttpCookie cookie : cookies)
+		{
+			if(cookie.getName().equalsIgnoreCase(key))
+				return cookie.getValue();
+		}
+		return null;
 	}
 	
 	public static void main(String[] args)
