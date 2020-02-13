@@ -29,6 +29,8 @@ public abstract class PractiSolver extends BaseSolver<Input, Output>
 		for(int i : this.output.getTypes()) {
 			result += i;
 		}
+		if(result > this.input.getMaxScore())
+			result = 0;
 		this.output.setScore(result);
 	}
 }
