@@ -83,7 +83,6 @@ public class Input extends BaseInput
 			numberOfBooksInLib = Integer.parseInt(splitted[0]);
 			signupTime = Integer.parseInt(splitted[1]);
 			booksPerDay = Integer.parseInt(splitted[2]);
-			maxScore = 0;
 			
 			lib = new Library(l, signupTime, booksPerDay);
 
@@ -96,11 +95,9 @@ public class Input extends BaseInput
 				bookId = Integer.parseInt(splitted[b]);
 					
 				lib.addBook(this.books.get(bookId));
-				
-				maxScore += this.books.get(bookId).getScore();
 			}
 			
-			lib.setMaxScore(maxScore);
+			lib.updateDurationAndScore();
 			this.libraries.add(lib);
 		}
 	}

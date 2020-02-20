@@ -11,6 +11,7 @@ public class Library
 	private List<Book>	books;
 	private List<Book>	scannedBooks;
 	private long		maxScore;
+	private long		duration;
 
 	public Library(int id, int signupTime, int booksPerDay)
 	{
@@ -69,6 +70,25 @@ public class Library
 
 		book.setScanned(true);
 		return this.scannedBooks.add(book);
+	}
+
+	public long getDuration()
+	{
+		return duration;
+	}
+	
+	public void updateDurationAndScore()
+	{
+		int score = 0;
+		for(Book b: this.getBooks())
+		{
+			if(b.isScanned())
+				continue;
+			score += b.getScore();
+		}
+		this.maxScore = score;
+		
+		this.duration = (int) Math.ceil(this.getBooks().size() / (double) this.booksPerDay) + this.signupTime;
 	}
 
 	public void reset()
