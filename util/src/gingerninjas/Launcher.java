@@ -199,6 +199,6 @@ public class Launcher
 			maxTotalScore += s2.getInput().getMaxScore();
 		}
 		
-		logger.info("total score: " + (int)totalScore + " of " + (int)maxTotalScore + "(" + String.format("%.2f", (totalScore/maxTotalScore*100)) + ")");
+		logger.info("total score: " + (int)totalScore + " of " + (int)maxTotalScore + "(" + String.format("%.2f", (totalScore/maxTotalScore*100)) + "%)");
 	}
 }
