@@ -14,156 +14,137 @@ import java.util.List;
 
 import gingerninjas.BaseOutput;
 
-public class Output extends BaseOutput
-{
-	private Input				input;
-	private List<Library>		libraries;
-	private int 				daysUsed = 0;
-	public void init(Input input)
-	{
+public class Output extends BaseOutput {
+	private Input input;
+	private List<Library> libraries;
+	private int daysUsed = 0;
+
+	public void init(Input input) {
 		this.input = input;
 		this.reset();
-		
+
 	}
 
-	public Output(File path, String name, boolean load) throws IOException
-	{
+	public Output(File path, String name, boolean load) throws IOException {
 		super(path, name, load);
 	}
 
 	@Override
-	protected void write(BufferedWriter r) throws IOException
-	{
+	protected void write(BufferedWriter r) throws IOException {
 		r.write(Integer.toString(libraries.size()) + "\n");
-		
+
 		Iterator<Library> i = libraries.iterator();
-		while(i.hasNext())
-		{
+		while (i.hasNext()) {
 			Library lib = i.next();
-			r.write(lib.getId() + " " + lib.getScannedBooks().size() + "\n");
-			String line = "";
-			for(Book b : lib.getScannedBooks()) {
-				line += b.getId() + " ";
+			if (lib.getScannedBooks().size() > 0) {
+				r.write(lib.getId() + " " + lib.getScannedBooks().size() + "\n");
+				String line = "";
+				for (Book b : lib.getScannedBooks()) {
+					line += b.getId() + " ";
+				}
+				r.write(line.trim());
+				if(i.hasNext()) {
+					r.write("\n");
+				}
+			} else {
+				logger.warn("Skipped library " + lib + ". No books available.");
 			}
-			r.write(line.trim() + "\n");
 		}
 		r.flush();
 	}
 
 	@Override
-	protected void parse(BufferedReader reader) throws IOException
-	{
+	protected void parse(BufferedReader reader) throws IOException {
 		/*
-		String line = null;
-
-		line = reader.readLine(); // omit first line
-		
-		String[] splittedLine;
-		int photoId;
-		List<Photo> photos;
-
-		line = reader.readLine();
-		while(line != null)
-		{
-			splittedLine = line.split(" ");
-			photos = new ArrayList<>(2);
-			for(String idS: splittedLine)
-			{
-				photoId = Integer.parseInt(idS);
-				photos.add(this.input.getPhotos().get(photoId));
-			}
-			this.slides.add(new Slide(photos, true));
-		}
-		*/
+		 * String line = null;
+		 * 
+		 * line = reader.readLine(); // omit first line
+		 * 
+		 * String[] splittedLine; int photoId; List<Photo> photos;
+		 * 
+		 * line = reader.readLine(); while(line != null) { splittedLine =
+		 * line.split(" "); photos = new ArrayList<>(2); for(String idS: splittedLine) {
+		 * photoId = Integer.parseInt(idS);
+		 * photos.add(this.input.getPhotos().get(photoId)); } this.slides.add(new
+		 * Slide(photos, true)); }
+		 */
 	}
-	
+
 	@Override
-	public double getScore()
-	{
+	public double getScore() {
 		this.calcScore();
 		return super.getScore();
 	}
 
-	public boolean addLibrary(Library lib)
-	{
-		if(libraries.contains(lib)) {
+	public boolean addLibrary(Library lib) {
+		if (libraries.contains(lib)) {
 			logger.warn("Library " + lib.getId() + " already in result set");
 			return false;
 		}
-		if(this.daysUsed + lib.getSignupTime() > input.getDaysForScanning()) {
+		if (this.daysUsed + lib.getSignupTime() > input.getDaysForScanning()) {
 			logger.warn("Library can not be added because out of time.");
 			return false;
 		}
 		return libraries.add(lib);
 	}
+
 	/*
-	public void addSlides(List<Slide> slides)
-	{
-		for(Slide s: slides)
-		{
-			addSlide(s);
-		}
-	}
+	 * public void addSlides(List<Slide> slides) { for(Slide s: slides) {
+	 * addSlide(s); } }
 	 */
-	public void calcScore()
-	{
+	public void calcScore() {
 		HashSet<Book> books = new HashSet<Book>();
 		int day = 0;
 		int maxDays = input.getDaysForScanning();
 
-		for(Library lib : libraries) {
+		for (Library lib : libraries) {
 			day += lib.getSignupTime();
 			int remainingDays = maxDays - day;
-			int scannedBooks = remainingDays * lib.getBooksPerDay();
-			if(lib.getScannedBooks().size() > scannedBooks) {
+			long scannedBooks = (long)remainingDays * (long)lib.getBooksPerDay();
+			if (lib.getScannedBooks().size() > scannedBooks) {
 				logger.warn("Scanned more books than time availibe in library " + lib.toString());
+			} else {
+			long maxBooks = Math.min(scannedBooks, (long)lib.getScannedBooks().size());
+			if(maxBooks > Integer.MAX_VALUE) {
+				logger.error("-------------------------------------- ÜBERLAUF ---------------------------");
 			}
-			int maxBooks = Math.min(scannedBooks, lib.getScannedBooks().size());
-			for(int i = 0; i < maxBooks; ++i) {
-				if(!books.add(lib.getScannedBooks().get(i))) {
+			for (int i = 0; i < (int)maxBooks; ++i) {
+				if (!books.add(lib.getScannedBooks().get(i))) {
 					logger.warn("Book " + lib.getScannedBooks().get(i) + " doube scanned!");
 				}
 			}
+			}
 		}
-		
+
 		int totalScore = 0;
-		for(Book b : books) {
+		for (Book b : books) {
 			totalScore += b.getScore();
 		}
 		this.score = totalScore;
 	}
-	
-	public void reset()
-	{
+
+	public void reset() {
 		this.libraries = new ArrayList<>();
 	}
-	
-	public static void main(String[] args) throws IOException
-	{
+
+	public static void main(String[] args) throws IOException {
 		/*
-		Output o = new Output(new File("."), "o", false);
-		o.init(new Input(new File("Online Qualification Round/"), "A - Example"));
-		
-		Slide[] slides = new Slide[] {
-			new Slide(o.input.getPhotos().get(0)),
-			new Slide(o.input.getPhotos().get(3)),
-			new Slide(o.input.getPhotos().get(1), o.input.getPhotos().get(2)),
-		};
-		
-		o.slides = Arrays.asList(slides);
-		System.out.println(o.getScore());
-		
-		Collections.shuffle(o.slides);
-		System.out.println(o.getScore());
-		
-		Collections.shuffle(o.slides);
-		System.out.println(o.getScore());
-		
-		Collections.shuffle(o.slides);
-		System.out.println(o.getScore());
-		
-		Collections.shuffle(o.slides);
-		System.out.println(o.getScore());
-		*/
+		 * Output o = new Output(new File("."), "o", false); o.init(new Input(new
+		 * File("Online Qualification Round/"), "A - Example"));
+		 * 
+		 * Slide[] slides = new Slide[] { new Slide(o.input.getPhotos().get(0)), new
+		 * Slide(o.input.getPhotos().get(3)), new Slide(o.input.getPhotos().get(1),
+		 * o.input.getPhotos().get(2)), };
+		 * 
+		 * o.slides = Arrays.asList(slides); System.out.println(o.getScore());
+		 * 
+		 * Collections.shuffle(o.slides); System.out.println(o.getScore());
+		 * 
+		 * Collections.shuffle(o.slides); System.out.println(o.getScore());
+		 * 
+		 * Collections.shuffle(o.slides); System.out.println(o.getScore());
+		 * 
+		 * Collections.shuffle(o.slides); System.out.println(o.getScore());
+		 */
 	}
 }
