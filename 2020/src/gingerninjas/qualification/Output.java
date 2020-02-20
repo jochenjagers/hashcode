@@ -15,7 +15,7 @@ import gingerninjas.BaseOutput;
 public class Output extends BaseOutput
 {
 	private Input				input;
-	private List<Slide>			slides;
+	private List<Library>		libraries;
 
 	public void init(Input input)
 	{
@@ -32,15 +32,18 @@ public class Output extends BaseOutput
 	@Override
 	protected void write(BufferedWriter r) throws IOException
 	{
-		r.write(Integer.toString(slides.size()));
-		r.write("\n");
+		r.write(Integer.toString(libraries.size()) + "\n");
 		
-		Iterator<Slide> i = slides.iterator();
+		Iterator<Library> i = libraries.iterator();
 		while(i.hasNext())
 		{
-			r.write(i.next().toString());
-			if(i.hasNext())
-				r.write('\n');
+			Library lib = i.next();
+			r.write(lib.getId() + " " + lib.getScannedBooks().size() + "\n");
+			String line = "";
+			for(Book b : lib.getScannedBooks()) {
+				line += b.getId() + " ";
+			}
+			r.write(line.trim() + "\n");
 		}
 		r.flush();
 	}
@@ -48,6 +51,7 @@ public class Output extends BaseOutput
 	@Override
 	protected void parse(BufferedReader reader) throws IOException
 	{
+		/*
 		String line = null;
 
 		line = reader.readLine(); // omit first line
@@ -68,6 +72,7 @@ public class Output extends BaseOutput
 			}
 			this.slides.add(new Slide(photos, true));
 		}
+		*/
 	}
 	
 	@Override
@@ -77,19 +82,15 @@ public class Output extends BaseOutput
 		return super.getScore();
 	}
 
-	public List<Slide> getSlides()
+	public boolean addLibrary(Library lib)
 	{
-		return slides;
-	}
-	
-	public boolean addSlide(Slide slide)
-	{
-		if(slide.isUsed())
+		if(libraries.contains(lib)) {
+			logger.error("Library " + lib.getId() + " already in result set");
 			return false;
-		slide.setUsed(true);
-		return this.slides.add(slide);
+		}
+		return libraries.add(lib);
 	}
-	
+	/*
 	public void addSlides(List<Slide> slides)
 	{
 		for(Slide s: slides)
@@ -97,9 +98,10 @@ public class Output extends BaseOutput
 			addSlide(s);
 		}
 	}
-
+	 */
 	public void calcScore()
 	{
+		/*
 		int totalScore = 0;
 		Slide previous = null;
 		for(Slide s: this.slides)
@@ -111,17 +113,17 @@ public class Output extends BaseOutput
 			previous = s;
 		}
 		this.score = totalScore;
+		*/
 	}
 	
 	public void reset()
 	{
-		this.slides = new ArrayList<>(this.input.getPhotos().size());
-		for(Photo p: input.getPhotos())
-			p.setUsed(false);
+		this.libraries = new ArrayList<>();
 	}
 	
 	public static void main(String[] args) throws IOException
 	{
+		/*
 		Output o = new Output(new File("."), "o", false);
 		o.init(new Input(new File("Online Qualification Round/"), "A - Example"));
 		
@@ -145,5 +147,6 @@ public class Output extends BaseOutput
 		
 		Collections.shuffle(o.slides);
 		System.out.println(o.getScore());
+		*/
 	}
 }
