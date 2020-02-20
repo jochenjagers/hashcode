@@ -1,6 +1,5 @@
 package gingerninjas.util.uploader;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,6 +54,7 @@ public class Round
 	private Date				start;
 	private Date				end;
 
+	@SuppressWarnings("deprecation")
 	public Round(String name, String... dataSets) {
 		this.name = name;
 		this.datasets = new ArrayList<DataSet>();
@@ -130,6 +130,7 @@ public class Round
 		return result;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public boolean isRunning() {
 		Date now = new Date();
 		now.setHours(now.getHours()-1);

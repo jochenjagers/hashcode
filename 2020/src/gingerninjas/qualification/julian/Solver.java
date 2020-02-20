@@ -500,7 +500,7 @@ public class Solver extends QualiSolver
 			@Override
 			public int compare(Library o1, Library o2)
 			{
-				long delta = o2.getMaxScore() - o1.getMaxScore();
+				double delta = o2.getMaxScore() - o1.getMaxScore();
 				if(delta > 0)
 					return 1;
 				else if(delta < 0)
