@@ -56,12 +56,19 @@ public class Input extends BaseInput
 		// read book scores
 		line = reader.readLine();
 		splitted = line.split(" ");
-		
+
+		int maxScore = 0;
+		int score;
 		for(int b = 0; b < numberOfBooks; b++)
 		{
-			books.add(new Book(b, Integer.parseInt(splitted[b])));
+			score = Integer.parseInt(splitted[b]);
+			books.add(new Book(b,score));
+			maxScore += score;
 		}		
-
+		
+		this.setMaxScore(maxScore);
+		
+		// read libraries
 		Library lib;
 		int numberOfBooksInLib;
 		int signupTime;
@@ -96,9 +103,9 @@ public class Input extends BaseInput
 
 	public void reset()
 	{
-		for(Library l: this.libraries)
+		for(Library l : this.libraries)
 			l.reset();
-		for(Book b: this.books)
+		for(Book b : this.books)
 			b.setScanned(false);
 	}
 
