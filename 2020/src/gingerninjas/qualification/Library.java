@@ -53,6 +53,9 @@ public class Library
 
 	public boolean scanBook(Book book)
 	{
+		if(book.isScanned())
+			return false;
+		
 		book.setScanned(true);
 		return this.scannedBooks.add(book);
 	}
