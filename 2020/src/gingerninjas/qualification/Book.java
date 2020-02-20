@@ -1,11 +1,15 @@
 package gingerninjas.qualification;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Book
 {
 	private int		id;
 	private int		score;
 	private boolean	scanned;
-
+	private List<Library> libraries = new ArrayList<Library>();
+	
 	public Book(int id, int score)
 	{
 		this.id = id;
@@ -28,6 +32,10 @@ public class Book
 		return scanned;
 	}
 
+	public void addLibrary(Library library) {
+		this.libraries.add(library);
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -53,6 +61,9 @@ public class Book
 	public void setScanned(boolean scanned)
 	{
 		this.scanned = scanned;
+		for(Library lib : this.libraries) {
+			lib.updateDurationAndScore();
+		}
 	}
 
 	@Override

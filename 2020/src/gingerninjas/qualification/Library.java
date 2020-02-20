@@ -60,6 +60,7 @@ public class Library
 
 	public boolean addBook(Book book)
 	{
+		book.addLibrary(this);
 		return this.books.add(book);
 	}
 
