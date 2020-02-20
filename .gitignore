@@ -8,3 +8,4 @@
 /cookies.properties
 /RemoteSystemsTempFiles
 /cookies.txt
+${ctx:filename}
