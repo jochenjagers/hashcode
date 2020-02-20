@@ -10,7 +10,8 @@ public class Library
 	private int			booksPerDay;
 	private List<Book>	books;
 	private List<Book>	scannedBooks;
-	
+	private long		maxScore;
+
 	public Library(int id, int signupTime, int booksPerDay)
 	{
 		super();
@@ -40,10 +41,20 @@ public class Library
 	{
 		return books;
 	}
-	
+
 	public List<Book> getScannedBooks()
 	{
 		return scannedBooks;
+	}
+
+	public long getMaxScore()
+	{
+		return maxScore;
+	}
+
+	public void setMaxScore(long maxScore)
+	{
+		this.maxScore = maxScore;
 	}
 
 	public boolean addBook(Book book)
@@ -55,22 +66,23 @@ public class Library
 	{
 		if(book.isScanned())
 			return false;
-		
+
 		book.setScanned(true);
 		return this.scannedBooks.add(book);
 	}
-	
+
 	public void reset()
 	{
 		this.scannedBooks = new ArrayList<Book>();
-		for(Book b: this.books)
+		for(Book b : this.books)
 		{
 			b.setScanned(false);
 		}
 	}
-	
+
 	@Override
-	public int hashCode() {
+	public int hashCode()
+	{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + id;
@@ -78,15 +90,16 @@ public class Library
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
+	public boolean equals(Object obj)
+	{
+		if(this == obj)
 			return true;
-		if (obj == null)
+		if(obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if(getClass() != obj.getClass())
 			return false;
 		Library other = (Library) obj;
-		if (id != other.id)
+		if(id != other.id)
 			return false;
 		return true;
 	}
@@ -94,6 +107,6 @@ public class Library
 	@Override
 	public String toString()
 	{
-		return "Library [id=" + id + ", #booksPerDay=" + booksPerDay + ", #books=" + books.size()  + ", #scanned=" + scannedBooks.size() + "]";
+		return "Library [id=" + id + ", #booksPerDay=" + booksPerDay + ", #books=" + books.size() + ", #scanned=" + scannedBooks.size() + "]";
 	}
 }
