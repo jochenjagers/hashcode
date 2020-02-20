@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -16,7 +18,7 @@ public class Output extends BaseOutput
 {
 	private Input				input;
 	private List<Library>		libraries;
-
+	private int 				daysUsed = 0;
 	public void init(Input input)
 	{
 		this.input = input;
@@ -85,7 +87,11 @@ public class Output extends BaseOutput
 	public boolean addLibrary(Library lib)
 	{
 		if(libraries.contains(lib)) {
-			logger.error("Library " + lib.getId() + " already in result set");
+			logger.warn("Library " + lib.getId() + " already in result set");
+			return false;
+		}
+		if(this.daysUsed + lib.getSignupTime() > input.getDaysForScanning()) {
+			logger.warn("Library can not be added because out of time.");
 			return false;
 		}
 		return libraries.add(lib);
@@ -101,19 +107,30 @@ public class Output extends BaseOutput
 	 */
 	public void calcScore()
 	{
-		/*
-		int totalScore = 0;
-		Slide previous = null;
-		for(Slide s: this.slides)
-		{
-			if(previous != null)
-			{
-				totalScore += s.calcInterestFactor(previous);
+		HashSet<Book> books = new HashSet<Book>();
+		int day = 0;
+		int maxDays = input.getDaysForScanning();
+
+		for(Library lib : libraries) {
+			day += lib.getSignupTime();
+			int remainingDays = maxDays - day;
+			int scannedBooks = remainingDays * lib.getBooksPerDay();
+			if(lib.getScannedBooks().size() > scannedBooks) {
+				logger.warn("Scanned more books than time availibe in library " + lib.toString());
 			}
-			previous = s;
+			int maxBooks = Math.min(scannedBooks, lib.getScannedBooks().size());
+			for(int i = 0; i < maxBooks; ++i) {
+				if(!books.add(lib.getScannedBooks().get(i))) {
+					logger.warn("Book " + lib.getScannedBooks().get(i) + " doube scanned!");
+				}
+			}
+		}
+		
+		int totalScore = 0;
+		for(Book b : books) {
+			totalScore += b.getScore();
 		}
 		this.score = totalScore;
-		*/
 	}
 	
 	public void reset()
