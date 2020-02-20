@@ -31,21 +31,24 @@ public class Output extends BaseOutput {
 
 	@Override
 	protected void write(BufferedWriter r) throws IOException {
-		r.write(Integer.toString(libraries.size()) + "\n");
+		long libCount = 0;
+		for(Library lib : libraries) {
+			if(lib.getScannedBooks().size() > 0) {
+				libCount++;
+			}
+		}
+		r.write(Long.toString(libCount));
 
 		Iterator<Library> i = libraries.iterator();
 		while (i.hasNext()) {
 			Library lib = i.next();
 			if (lib.getScannedBooks().size() > 0) {
-				r.write(lib.getId() + " " + lib.getScannedBooks().size() + "\n");
+				r.write("\n" + lib.getId() + " " + lib.getScannedBooks().size() + "\n");
 				String line = "";
 				for (Book b : lib.getScannedBooks()) {
 					line += b.getId() + " ";
 				}
 				r.write(line.trim());
-				if(i.hasNext()) {
-					r.write("\n");
-				}
 			} else {
 				logger.warn("Skipped library " + lib + ". No books available.");
 			}
