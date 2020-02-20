@@ -25,9 +25,14 @@ public class Solver extends QualiSolver
 		for(Library l: input.getLibraries())
 		{
 			remaining -= l.getSignupTime();
+			if(remaining < 0)
+				break;
 			
-			int capacity = l.getBooksPerDay() * remaining;
+			long capacity = l.getBooksPerDay() * (long) remaining;
 			int scanned = 0;
+			
+			logger.info("processing " + l + ": remaining=" + remaining + ", capacity=" + capacity);
+			
 			if(output.addLibrary(l))
 			{
 				for(Book b: l.getBooks())
