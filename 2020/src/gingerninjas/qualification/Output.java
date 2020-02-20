@@ -39,15 +39,22 @@ public class Output extends BaseOutput {
 		}
 		r.write(Long.toString(libCount));
 
+		HashSet<Book> books = new HashSet<Book>();
+		
 		Iterator<Library> i = libraries.iterator();
 		while (i.hasNext()) {
 			Library lib = i.next();
 			if (lib.getScannedBooks().size() > 0) {
-				r.write("\n" + lib.getId() + " " + lib.getScannedBooks().size() + "\n");
 				String line = "";
+				int bookCount = 0;
 				for (Book b : lib.getScannedBooks()) {
-					line += b.getId() + " ";
+					if(!books.contains(b)) {
+						line += b.getId() + " ";
+						bookCount++;
+						books.add(b);
+					}
 				}
+				r.write("\n" + lib.getId() + " " + bookCount + "\n");
 				r.write(line.trim());
 			} else {
 				logger.warn("Skipped library " + lib + ". No books available.");
@@ -89,6 +96,10 @@ public class Output extends BaseOutput {
 			return false;
 		}
 		return libraries.add(lib);
+	}
+	
+	public void removeLibrary(Library lib) {
+		libraries.remove(lib);
 	}
 
 	/*
