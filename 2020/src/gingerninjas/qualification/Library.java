@@ -13,6 +13,7 @@ public class Library
 	private List<Book>	scannedBooks;
 	private long		maxScore;
 	private long		duration;
+	private double 		rating;
 
 	public Library(int id, int signupTime, int booksPerDay)
 	{
@@ -88,6 +89,16 @@ public class Library
 
 		book.setScanned(true);
 		return this.scannedBooks.add(book);
+	}
+
+	public double getRating()
+	{
+		return rating;
+	}
+
+	public void setRating(double rating)
+	{
+		this.rating = rating;
 	}
 
 	public long getDuration()
