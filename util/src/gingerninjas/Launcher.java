@@ -183,8 +183,9 @@ public class Launcher
 
 		
 		// gesamtergebnis berechnen
-		int totalScore = 0;
-		int maxTotalScore = 0;
+		double totalScore = 0;
+		double maxTotalScore = 0;
+		
 		for(BaseSolver<?, ?> s2 : solvers)
 		{
 			try
@@ -197,7 +198,7 @@ public class Launcher
 			totalScore += s2.getOutput().getScore();
 			maxTotalScore += s2.getInput().getMaxScore();
 		}
-
-		logger.info("total score: " + totalScore + " of " + maxTotalScore);
+		
+		logger.info("total score: " + (int)totalScore + " of " + (int)maxTotalScore + "(" + String.format("%.2f", (totalScore/maxTotalScore*100)) + ")");
 	}
 }
