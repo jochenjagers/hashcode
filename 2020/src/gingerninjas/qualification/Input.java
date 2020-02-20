@@ -4,75 +4,114 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
+
 import gingerninjas.BaseInput;
 
 public class Input extends BaseInput
 {
-	List<Photo> photos;
-	
-	
+	private List<Book>		books;
+	private List<Library>	libraries;
+	private int				daysForScanning;
+
 	public Input(File path, String name) throws IOException
 	{
 		super(path, name);
 	}
 
-	
-	public List<Photo> getPhotos() {
-		return photos;
+	public List<Book> getBooks()
+	{
+		return books;
 	}
 
+	public List<Library> getLibraries()
+	{
+		return libraries;
+	}
+
+	public int getDaysForScanning()
+	{
+		return daysForScanning;
+	}
 
 	@Override
 	protected void parse(BufferedReader reader) throws IOException
 	{
 		String line = null;
+		String[] splitted;
 
+		// read first line
 		line = reader.readLine();
+		splitted = line.split(" ");
+
+		int numberOfBooks = Integer.parseInt(splitted[0]);
+		int numberOfLibraries = Integer.parseInt(splitted[1]);
+		this.daysForScanning = Integer.parseInt(splitted[2]);
 		
-		int rows = Integer.parseInt(line);
-		this.photos = new ArrayList<Photo>(rows);
-				
-		for(int r = 0; r < rows; r++)
+		this.books = new ArrayList<Book>(numberOfBooks);
+		this.libraries = new ArrayList<Library>(numberOfLibraries);
+
+		// read book scores
+		line = reader.readLine();
+		splitted = line.split(" ");
+		
+		for(int b = 0; b < numberOfBooks; b++)
 		{
+			books.add(new Book(b, Integer.parseInt(splitted[b])));
+		}		
+
+		Library lib;
+		int numberOfBooksInLib;
+		int signupTime;
+		int booksPerDay;
+		int bookId;
+		for(int l = 0; l < numberOfLibraries; l++)
+		{
+			// read Library info
 			line = reader.readLine();
-			logger.debug("endpoint: " + line);
-			ArrayList<String> splittedLine = new ArrayList<>(Arrays.asList(line.split(" ")));
+			splitted = line.split(" ");
 			
+			numberOfBooksInLib = Integer.parseInt(splitted[0]);
+			signupTime = Integer.parseInt(splitted[1]);
+			booksPerDay = Integer.parseInt(splitted[2]);
 			
-			char orientation = splittedLine.get(0).charAt(0);
-			// remove orientation
-			splittedLine.remove(0);
-			// remove tag count
-			splittedLine.remove(0);
+			lib = new Library(l, signupTime, booksPerDay);
+
+			// read books
+			line = reader.readLine();
+			splitted = line.split(" ");
 			
-			this.photos.add(new Photo(r, orientation, splittedLine));
+			for(int b = 0; b < numberOfBooksInLib; b++)
+			{
+				bookId = Integer.parseInt(splitted[b]);
+				
+				lib.addBook(this.books.get(bookId));
+			}
 			
+			this.libraries.add(lib);
 		}
 	}
 
 	public void reset()
 	{
+		for(Library l: this.libraries)
+			l.reset();
+		for(Book b: this.books)
+			b.setScanned(false);
 	}
 
 	@Override
 	public String toString()
 	{
-		return "Input [#photos "+this.photos.size()+"]";
+		return "Input [#books=" + this.books.size() + ", #libraries=" + this.libraries.size() + ", #day=" + this.daysForScanning + "]";
 	}
 
 	public static void main(String[] args) throws IOException
 	{
-		
-		
-		Input test = new Input(new File("Online Qualification Round/"), "A - Example");
-		
-		LogManager.getLogger().info("A - Example Size: " + test.photos.size());
-		for(Photo p : test.photos) {
-			LogManager.getLogger().info(p);
-		}
+		Input test = new Input(new File("Online Qualification Round/"), "A - example");
+
+		LogManager.getLogger().info("A - example: " + test.toString());
 	}
 }

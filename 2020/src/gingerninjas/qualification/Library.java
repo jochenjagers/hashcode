@@ -69,6 +69,6 @@ public class Library
 	@Override
 	public String toString()
 	{
-		return "Library [id=" + id + ", books=" + books.size()  + ", scanned=" + scannedBooks.size() + "]";
+		return "Library [id=" + id + ", #books=" + books.size()  + ", #scanned=" + scannedBooks.size() + "]";
 	}
 }
