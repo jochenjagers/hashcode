@@ -56,4 +56,19 @@ public class Library
 		book.setScanned(true);
 		return this.scannedBooks.add(book);
 	}
+	
+	public void reset()
+	{
+		this.scannedBooks = new ArrayList<Book>();
+		for(Book b: this.books)
+		{
+			b.setScanned(false);
+		}
+	}
+	
+	@Override
+	public String toString()
+	{
+		return "Library [id=" + id + ", #books=" + books.size()  + ", #scanned=" + scannedBooks.size() + "]";
+	}
 }
