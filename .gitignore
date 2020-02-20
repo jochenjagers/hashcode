@@ -6,3 +6,5 @@
 *.out*
 *.log
 /cookies.properties
+/RemoteSystemsTempFiles
+/cookies.txt
