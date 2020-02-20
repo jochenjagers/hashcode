@@ -310,7 +310,7 @@ public class Solver extends QualiSolver
 					}
 				}
 
-				rating = score / l.getSignupTime();
+				rating = score / (remaining - l.getSignupTime());
 				l.setRating(rating);
 			}
 
@@ -321,6 +321,9 @@ public class Solver extends QualiSolver
 					return (int) Math.signum(o2.getRating() - o1.getRating());
 				}
 			});
+			
+			logger.info("first = " + libsAvailable.getFirst() + ": rating=" + libsAvailable.getFirst().getRating());
+			logger.info("last =  " + libsAvailable.getLast() + ": rating=" + libsAvailable.getLast().getRating());
 
 			lib = libsAvailable.pollFirst();
 			remaining -= lib.getSignupTime();
