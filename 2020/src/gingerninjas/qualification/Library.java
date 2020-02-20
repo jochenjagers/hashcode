@@ -1,6 +1,7 @@
 package gingerninjas.qualification;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class Library
@@ -28,6 +29,22 @@ public class Library
 		return id;
 	}
 
+	public void sortBooksByScore() {
+		books.sort(new Comparator<Book>() {
+			@Override
+			public int compare(Book o1, Book o2)
+			{
+				long delta = o2.getScore() - o1.getScore();
+				if(delta > 0)
+					return 1;
+				else if(delta < 0)
+					return -1;
+				else 
+					return 0;
+			}
+		}); 
+	}
+	
 	public int getSignupTime()
 	{
 		return signupTime;
