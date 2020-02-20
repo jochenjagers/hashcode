@@ -43,11 +43,15 @@ public class Output extends BaseOutput {
 		while (i.hasNext()) {
 			Library lib = i.next();
 			if (lib.getScannedBooks().size() > 0) {
-				r.write("\n" + lib.getId() + " " + lib.getScannedBooks().size() + "\n");
 				String line = "";
+				int bookCount = 0;
 				for (Book b : lib.getScannedBooks()) {
-					line += b.getId() + " ";
+					if(!b.isScanned()) {
+						line += b.getId() + " ";
+						bookCount++;
+					}
 				}
+				r.write("\n" + lib.getId() + " " + bookCount + "\n");
 				r.write(line.trim());
 			} else {
 				logger.warn("Skipped library " + lib + ". No books available.");
