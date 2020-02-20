@@ -145,6 +145,6 @@ public class Library
 	@Override
 	public String toString()
 	{
-		return "Library [id=" + id + ", #booksPerDay=" + booksPerDay + ", #books=" + books.size() + ", #scanned=" + scannedBooks.size() + ", maxScore=" + this.maxScore + "]";
+		return "Library [id=" + id + ", signUpTime=" + signupTime + ", #booksPerDay=" + booksPerDay + ", #books=" + books.size() + ", #scanned=" + scannedBooks.size() + ", maxScore=" + this.maxScore + "]";
 	}
 }
