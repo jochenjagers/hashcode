@@ -86,6 +86,10 @@ public class Output extends BaseOutput {
 		return super.getScore();
 	}
 
+	public List<Library> getLibraries() {
+		return this.libraries;
+	}
+	
 	public boolean addLibrary(Library lib) {
 		if (libraries.contains(lib)) {
 			logger.warn("Library " + lib.getId() + " already in result set");
@@ -95,6 +99,7 @@ public class Output extends BaseOutput {
 			logger.warn("Library can not be added because out of time.");
 			return false;
 		}
+		this.daysUsed += lib.getSignupTime();
 		return libraries.add(lib);
 	}
 	
