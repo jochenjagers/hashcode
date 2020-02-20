@@ -18,6 +18,7 @@ public class Library
 		this.signupTime = signupTime;
 		this.booksPerDay = booksPerDay;
 		this.books = new ArrayList<Book>();
+		this.scannedBooks = new ArrayList<Book>();
 	}
 
 	public int getId()
@@ -38,6 +39,11 @@ public class Library
 	public List<Book> getBooks()
 	{
 		return books;
+	}
+	
+	public List<Book> getScannedBooks()
+	{
+		return scannedBooks;
 	}
 
 	public boolean addBook(Book book)
