@@ -18,48 +18,50 @@ public class Solver extends QualiSolver
 	{
 		input.reset();
 		output.reset();
+		
+		f();
 
-		backwards();		
-		output.publish();
-		
-		input.reset();
-		output.reset();
-		
-		b();		
-		output.publish();
-		
-		input.reset();
-		output.reset();
-		
-		c();		
-		output.publish();
-		
-		input.reset();
-		output.reset();
-		
-		d();		
-		output.publish();
-		
-		input.reset();
-		output.reset();
-		
-		d2();		
-		output.publish();
-		
-		input.reset();
-		output.reset();
-		
-		e();		
-		output.publish();
-		
-		input.reset();
-		output.reset();
-		
-		f();		
-		output.publish();
-		
-		quickAndDirty();		
-		output.publish();
+//		backwards();		
+//		output.publish();
+//		
+//		input.reset();
+//		output.reset();
+//		
+//		b();		
+//		output.publish();
+//		
+//		input.reset();
+//		output.reset();
+//		
+//		c();		
+//		output.publish();
+//		
+//		input.reset();
+//		output.reset();
+//		
+//		d();		
+//		output.publish();
+//		
+//		input.reset();
+//		output.reset();
+//		
+//		d2();		
+//		output.publish();
+//		
+//		input.reset();
+//		output.reset();
+//		
+//		e();		
+//		output.publish();
+//		
+//		input.reset();
+//		output.reset();
+//		
+//		f();		
+//		output.publish();
+//		
+//		quickAndDirty();		
+//		output.publish();
 	}
 
 	public void backwards()
